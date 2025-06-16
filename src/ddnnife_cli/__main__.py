@@ -137,9 +137,17 @@ def _run_ddnnife(file_in = None, file_out = None, file_nnf = None, cmd = None, i
         f'{f" --save-ddnnf {file_nnf}" if file_nnf is not None else ""}'\
         f'{f" {cmd}" if cmd else ""}'
 
-    call = via_subprocess(call_cmd, **kwargs)
-
-    return call
+    try:
+        call = via_subprocess(call_cmd, **kwargs)
+    except subprocess.TimeoutExpired:
+        print(f"Aborted at timeout (--timeout {kwargs["timeout"]})")
+    except Exception as e:
+        print(f"Failed with exception ({e})")
+        print("--- STDOUT", "-" * 24)
+        print(call.stdout.decode("utf-8"))
+        print()
+        print("--- STDERR", "-" * 24)
+        print(call.stderr.decode("utf-8"))
 
 
 def check(image, tag):
@@ -154,6 +162,8 @@ def check_install_ddnnife(image, tag):
     else:
         print(f"Could not find \"{image}:{tag}\" on your system.")
         answer = input("Do you want to download it? [yes/No]")
+        print()
+        
         if answer and answer.lower()[0] == "y":
             via_subprocess(f"docker pull {image}:{tag}")
             

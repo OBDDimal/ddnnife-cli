@@ -21,5 +21,11 @@ In the case that the default [image and tag](ghcr.io/softvare-group/ddnnife:main
 Afterwards, you can use `ddnnife` as described in its [documentation](https://github.com/SoftVarE-Group/d-dnnf-reasoner/?tab=readme-ov-file#usage). For instance to count the number of satisfying solutions in a DIMACS file:
 
 ```bash
-ddnnife-cli --input <your-input-file.dimacs>
+ddnnife-cli --input <your-input-file>.dimacs
+```
+
+Or to compute a uniform random sample of size 1024:
+
+```bash
+ddnnife-cli --input <your-input-file>.dimacs -- urs -n 1024
 ```
